@@ -2,10 +2,8 @@
 require_once __DIR__ . '/includes/config.php';
 $conn = getConnection();
 $genre = trim($_GET['genre'] ?? '');
-
 $validGenres = ['Pop', 'Rock', 'Hip-Hop', 'Jazz', 'R&B', 'Indie', 'Electronic', 'Country', 'Classical', 'Metal'];
 if (!in_array($genre, $validGenres)) redirect('/listeners_lounge/index.php');
-
 $pageTitle = $genre . ' Albums';
 
 $stmt = $conn->prepare("
@@ -41,13 +39,13 @@ $albums = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <div class="album-grid album-grid--large">
         <?php foreach ($albums as $album): ?>
         <a href="/listeners_lounge/album.php?id=<?= $album['id'] ?>" class="album-card">
-            <div class="album-cover" style="background-color: <?= h($album['cover_color']) ?>;">
+            <div class="album-cover">
                 <?php if (!empty($album['cover_image'])): ?>
                     <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
                          alt="<?= h($album['title']) ?>"
                          onerror="this.style.display='none'">
                 <?php else: ?>
-                    <?= h($album['cover_emoji']) ?>
+                    <span style="color:#666666;">🎵</span>
                 <?php endif; ?>
             </div>
             <div class="album-card-info">

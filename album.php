@@ -104,13 +104,13 @@ $tracks = array_map('trim', explode(',', $album['track_listing'] ?? ''));
 
     <!-- left sidebar -->
     <div class="album-detail-sidebar">
-        <div class="album-cover large" style="background-color: <?= h($album['cover_color']) ?>;">
+        <div class="album-cover large">
             <?php if (!empty($album['cover_image'])): ?>
                 <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
                      alt="<?= h($album['title']) ?>"
                      onerror="this.style.display='none'">
             <?php else: ?>
-                <?= h($album['cover_emoji']) ?>
+                <span style="color:#666666; font-size:60px;">🎵</span>
             <?php endif; ?>
         </div>
 
@@ -194,7 +194,8 @@ $tracks = array_map('trim', explode(',', $album['track_listing'] ?? ''));
                 <h3><?= $userReview ? 'Edit Your Review' : 'Write a Review' ?></h3>
                 <form method="POST">
                     <input type="hidden" name="action" value="submit_review">
-                    <input type="hidden" name="rating" id="ratingInput" value="<?= $userReview ? $userReview['rating'] : 0 ?>">
+                    <input type="hidden" name="rating" id="ratingInput"
+                           value="<?= $userReview ? $userReview['rating'] : 0 ?>">
 
                     <div class="form-group">
                         <label class="form-label">Rating</label>

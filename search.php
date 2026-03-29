@@ -61,10 +61,11 @@ if ($q) {
     <?php if (!empty($album['cover_image'])): ?>
         <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
              alt="<?= h($album['title']) ?>"
-             onerror="this.style.display='none'">
+              onerror="this.style.display='none'">
     <?php else: ?>
-        <?= h($album['cover_emoji']) ?>
+        <span style="color:#666666;">No image</span>
     <?php endif; ?>
+
 </div>
 
             <div class="album-card-info">
