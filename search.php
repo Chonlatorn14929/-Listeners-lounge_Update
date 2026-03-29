@@ -29,7 +29,6 @@ if ($q) {
     ");
     $albums = $result->fetch_all(MYSQLI_ASSOC);
 }
-$conn->close();
 ?>
 <?php require_once __DIR__ . '/includes/header.php'; ?>
 
@@ -57,9 +56,17 @@ $conn->close();
     <div class="album-grid album-grid--large">
         <?php foreach ($albums as $album): ?>
         <a href="/listeners_lounge/album.php?id=<?= $album['id'] ?>" class="album-card">
-            <div class="album-cover" style="background: <?= h($album['cover_color']) ?>;">
-                <?= h($album['cover_emoji']) ?>
-            </div>
+
+       <div class="album-cover">
+    <?php if (!empty($album['cover_image'])): ?>
+        <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
+             alt="<?= h($album['title']) ?>"
+             onerror="this.style.display='none'">
+    <?php else: ?>
+        <?= h($album['cover_emoji']) ?>
+    <?php endif; ?>
+</div>
+
             <div class="album-card-info">
                 <div class="album-card-title"><?= h($album['title']) ?></div>
                 <div class="album-card-artist"><?= h($album['artist']) ?></div>
