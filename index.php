@@ -50,22 +50,20 @@ $genres = $genreResult->fetch_all(MYSQLI_ASSOC);
         <h2 class="section-title">Featured Albums</h2>
         <a href="/listeners_lounge/search.php" class="section-link">View all</a>
     </div>
-
     <div class="album-grid album-grid--large">
         <?php foreach ($featured as $album):
             $avg = $album['avg_rating'] ? round($album['avg_rating'], 1) : null;
         ?>
         <a href="/listeners_lounge/album.php?id=<?= $album['id'] ?>" class="album-card">
-               
-        <div class="album-cover large">
-    <?php if (!empty($album['cover_image'])): ?>
-        <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
-             alt="<?= h($album['title']) ?>"
-             onerror="this.style.display='none'">
-    <?php else: ?>
-        <span style="color:#666666;">No image</span>
-    <?php endif; ?>
-</div>
+            <div class="album-cover">
+                <?php if (!empty($album['cover_image'])): ?>
+                    <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
+                         alt="<?= h($album['title']) ?>"
+                         onerror="this.style.display='none'">
+                <?php else: ?>
+                    <span style="color:#666666;">🎵</span>
+                <?php endif; ?>
+            </div>
             <div class="album-card-info">
                 <div class="album-card-title"><?= h($album['title']) ?></div>
                 <div class="album-card-artist"><?= h($album['artist']) ?></div>
@@ -85,11 +83,21 @@ $genres = $genreResult->fetch_all(MYSQLI_ASSOC);
 <div class="section">
     <div class="section-header">
         <h2 class="section-title">Browse by Genre</h2>
+        <select class="genre-select"
+                onchange="if(this.value) window.location='/listeners_lounge/genre.php?genre='+this.value">
+            <option value="">Select a genre...</option>
+            <?php foreach ($genres as $g): ?>
+            <option value="<?= urlencode($g['genre']) ?>">
+                <?= h($g['genre']) ?> (<?= $g['count'] ?>)
+            </option>
+            <?php endforeach; ?>
+        </select>
     </div>
-    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
         <?php foreach ($genres as $g): ?>
         <a href="/listeners_lounge/genre.php?genre=<?= urlencode($g['genre']) ?>"
-           style="background-color: #222222; border: 1px solid #444444; padding: 7px 16px; border-radius: 4px; font-size: 14px; color: #eeeeee;">
+           style="background-color: #222222; border: 1px solid #444444; padding: 7px 16px;
+                  border-radius: 4px; font-size: 14px; color: #eeeeee;">
             <?= h($g['genre']) ?>
             <span style="color: #4caf50; font-size: 12px;">(<?= $g['count'] ?>)</span>
         </a>
@@ -106,13 +114,13 @@ $genres = $genreResult->fetch_all(MYSQLI_ASSOC);
     <div class="album-grid">
         <?php foreach ($recentReviewed as $album): ?>
         <a href="/listeners_lounge/album.php?id=<?= $album['id'] ?>" class="album-card">
-            <div class="album-cover" style="background-color: <?= h($album['cover_color']) ?>;">
+            <div class="album-cover">
                 <?php if (!empty($album['cover_image'])): ?>
                     <img src="/listeners_lounge/assets/images/<?= h($album['cover_image']) ?>"
                          alt="<?= h($album['title']) ?>"
                          onerror="this.style.display='none'">
                 <?php else: ?>
-                    <?= h($album['cover_emoji']) ?>
+                    <span style="color:#666666;">🎵</span>
                 <?php endif; ?>
             </div>
             <div class="album-card-info">

@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // get my reviews
 $rStmt = $conn->prepare("
-    SELECT r.*, a.title as album_title, a.artist, a.cover_color, a.cover_emoji, a.cover_image, a.id as album_id
+    SELECT r.*, a.title as album_title, a.artist, a.cover_image, a.id as album_id
     FROM reviews r JOIN albums a ON r.album_id = a.id
     WHERE r.user_id = ? ORDER BY r.created_at DESC
 ");
@@ -91,7 +91,7 @@ $reviews = $rStmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 // get my favourites
 $fStmt = $conn->prepare("
-    SELECT f.*, a.title, a.artist, a.cover_color, a.cover_emoji, a.cover_image, a.id as album_id
+    SELECT f.*, a.title, a.artist, a.cover_image, a.id as album_id
     FROM favourites f JOIN albums a ON f.album_id = a.id
     WHERE f.user_id = ? ORDER BY f.created_at DESC
 ");
@@ -140,29 +140,28 @@ $memberSince = date('M Y', strtotime($user['created_at']));
             <div class="empty-state-icon">📝</div>
             <h3>No reviews yet</h3>
             <p>Browse albums and share your thoughts!</p>
-            <a href="/listeners_lounge/index.php" class="btn btn--accent" style="width: auto; display: inline-block;">Browse Albums</a>
+            <a href="/listeners_lounge/index.php" class="btn btn--accent"
+               style="width: auto; display: inline-block;">Browse Albums</a>
         </div>
         <?php else: ?>
             <?php foreach ($reviews as $review): ?>
             <div class="my-review-card">
-                <a href="/listeners_lounge/album.php?id=<?= $review['album_id'] ?>">
-                    <div class="my-review-cover" style="background-color: <?= h($review['cover_color']) ?>;">
-                        <?php if (!empty($review['cover_image'])): ?>
-                            <img src="/listeners_lounge/assets/images/<?= h($review['cover_image']) ?>"
-                                 alt="cover" onerror="this.style.display='none'">
-                        <?php else: ?>
-                            <?= h($review['cover_emoji']) ?>
-                        <?php endif; ?>
-                    </div>
-                </a>
+               <a href="/listeners_lounge/album.php?id=<?= $review['album_id'] ?>">
+    <div class="my-review-cover">
+        🎵
+    </div>
+</a>
                 <div class="my-review-body">
                     <a href="/listeners_lounge/album.php?id=<?= $review['album_id'] ?>">
-                        <div class="my-review-title"><?= h($review['album_title']) ?> — <?= h($review['artist']) ?></div>
+                        <div class="my-review-title">
+                            <?= h($review['album_title']) ?> — <?= h($review['artist']) ?>
+                        </div>
                     </a>
                     <?= renderStars($review['rating']) ?>
                     <div class="my-review-text"><?= h($review['review_text']) ?></div>
                     <div class="my-review-actions">
-                        <a href="/listeners_lounge/album.php?id=<?= $review['album_id'] ?>" class="btn btn--outline btn--sm">Edit</a>
+                        <a href="/listeners_lounge/album.php?id=<?= $review['album_id'] ?>"
+                           class="btn btn--outline btn--sm">Edit</a>
                         <form method="POST" style="display: inline;">
                             <input type="hidden" name="action" value="delete_review">
                             <input type="hidden" name="review_id" value="<?= $review['id'] ?>">
@@ -186,19 +185,21 @@ $memberSince = date('M Y', strtotime($user['created_at']));
             <div class="empty-state-icon">♡</div>
             <h3>No favourites yet</h3>
             <p>Add albums to your favourites from the album page.</p>
-            <a href="/listeners_lounge/index.php" class="btn btn--accent" style="width: auto; display: inline-block;">Browse Albums</a>
+            <a href="/listeners_lounge/index.php" class="btn btn--accent"
+               style="width: auto; display: inline-block;">Browse Albums</a>
         </div>
         <?php else: ?>
         <div class="favourites-grid">
             <?php foreach ($favourites as $fav): ?>
             <div class="fav-card">
                 <a href="/listeners_lounge/album.php?id=<?= $fav['album_id'] ?>">
-                    <div class="album-cover" style="background-color: <?= h($fav['cover_color']) ?>; border-radius: 0; font-size: 30px;">
+                    <div class="album-cover" style="border-radius: 0; font-size: 30px;">
                         <?php if (!empty($fav['cover_image'])): ?>
                             <img src="/listeners_lounge/assets/images/<?= h($fav['cover_image']) ?>"
-                                 alt="cover" onerror="this.style.display='none'">
+                                 alt="cover"
+                                 onerror="this.style.display='none'">
                         <?php else: ?>
-                            <?= h($fav['cover_emoji']) ?>
+                            <span style="color:#666666;">🎵</span>
                         <?php endif; ?>
                     </div>
                 </a>
@@ -222,39 +223,65 @@ $memberSince = date('M Y', strtotime($user['created_at']));
     <div class="account-panel" id="settings">
         <div class="settings-grid">
 
+        <div class="review-form-card">
+            <h3>Update Profile</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="update_profile">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-input"
+                           value="<?= h($user['username']) ?>">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input"
+                           value="<?= h($user['email']) ?>">
+                </div>
+                <button type="submit" class="btn btn--accent" style="width: auto;">Save</button>
+            </form>
+        </div>
+
+        <!-- CHANGE PASSWORD  -->
+        <div class="review-form-card">
+            <h3>Change Password</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="update_password">
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" name="current_password" class="form-input"
+                           placeholder="Current password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" name="new_password" class="form-input"
+                           placeholder="Min 8 characters">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" name="confirm_password" class="form-input"
+                           placeholder="Repeat new password">
+                </div>
+                <button type="submit" class="btn btn--outline" style="width: auto;">Update Password</button>
+            </form>
+        </div>
+
+    </div>
+</div>
             <div class="review-form-card">
                 <h3>Update Profile</h3>
                 <form method="POST">
                     <input type="hidden" name="action" value="update_profile">
                     <div class="form-group">
                         <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-input" value="<?= h($user['username']) ?>">
+                        <input type="text" name="username" class="form-input"
+                               value="<?= h($user['username']) ?>">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-input" value="<?= h($user['email']) ?>">
+                        <input type="email" name="email" class="form-input"
+                               value="<?= h($user['email']) ?>">
                     </div>
                     <button type="submit" class="btn btn--accent" style="width: auto;">Save</button>
-                </form>
-            </div>
-
-            <div class="review-form-card">
-                <h3>Change Password</h3>
-                <form method="POST">
-                    <input type="hidden" name="action" value="update_password">
-                    <div class="form-group">
-                        <label class="form-label">Current Password</label>
-                        <input type="password" name="current_password" class="form-input" placeholder="Current password">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">New Password</label>
-                        <input type="password" name="new_password" class="form-input" placeholder="Min 8 characters">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Confirm New Password</label>
-                        <input type="password" name="confirm_password" class="form-input" placeholder="Repeat new password">
-                    </div>
-                    <button type="submit" class="btn btn--outline" style="width: auto;">Update Password</button>
                 </form>
             </div>
 
