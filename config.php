@@ -2,10 +2,10 @@
 // Database Configuration
 // Listeners Lounge - INT1059 Advanced Web
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'listeners_lounge');
+define('DB_HOST', 'sql310.infinityfree.com');
+define('DB_USER', 'if0_41687360');
+define('DB_PASS', 'joon36472');
+define('DB_NAME', 'if0_41687360_listeners');
 
 function getConnection() {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
