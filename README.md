@@ -34,6 +34,11 @@ http://listenerslounge.lovestoblog.com/listeners_lounge/
 4. Start Apache and MySQL in XAMPP
 5. Visit `http://localhost/listeners_lounge/`
 
+## For local testing change confic.php to:
+define('DB_HOST', 'sql310.infinityfree.com');
+define('DB_USER', 'if0_41687360');
+define('DB_PASS', 'joon36472');
+define('DB_NAME', 'if0_41687360_listeners');
 
 ## GitHub Repository
 https://github.com/Chonlatorn14929/-Listeners-lounge_Update
