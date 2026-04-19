@@ -23,22 +23,27 @@ read and write reviews, and save their favourite albums to their account.
 - Update username, email and password
 -------------------------------------------------------------
 ## Live Website
-http://listenerslounge.lovestoblog.com/listeners_lounge/
+http://listenerslounge.lovestoblog.com/
 -------------------------------------------------------------
-
-
-## How to Run Locally
-1. Install XAMPP
-2. Import `database.sql` into phpMyAdmin
-3. Copy all files into `xampp/htdocs/listeners_lounge/`
-4. Start Apache and MySQL in XAMPP
-5. Visit `http://localhost/listeners_lounge/`
-
-## For local testing change confic.php to:
+## For local Live testing change confic.php to:
 define('DB_HOST', 'sql310.infinityfree.com');
 define('DB_USER', 'if0_41687360');
 define('DB_PASS', 'joon36472');
 define('DB_NAME', 'if0_41687360_listeners');
+
+## How to Run Locally
+1. Install XAMPP
+2. Import `updatedatabase.sql` into phpMyAdmin
+3. Copy all files into `xampp/htdocs/listeners_lounge/`
+4. Start Apache and MySQL in XAMPP
+5. Open `includes/config.php` and change database details to:
+```php
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'listeners_lounge');
+```
+6. Visit `http://localhost/listeners_lounge/`
 
 ## GitHub Repository
 https://github.com/Chonlatorn14929/-Listeners-lounge_Update
