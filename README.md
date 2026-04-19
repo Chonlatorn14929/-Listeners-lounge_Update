@@ -44,8 +44,8 @@ define('DB_NAME', 'if0_41687360_listeners');
 https://github.com/Chonlatorn14929/-Listeners-lounge_Update
 
 ## Demo Login
-- Username: MusicLover42
-- Password: password
+- Username: testing1@gmail.com
+- Password: testing123
 
 ## Built With
 - PHP
